@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dabai.cms.mapper.UserMapper">
+
+    <resultMap type="User" id="UserResult">
+        <result property="id"    column="id"    />
+        <result property="username"    column="username"    />
+        <result property="password"    column="password"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="age"    column="age"    />
+        <result property="sex"    column="sex"    />
+        <result property="address"    column="address"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="salt"    column="salt"    />
+    </resultMap>
+
+    <sql id="selectFields">
+        id, username, password, nick_name, age, sex, address, avatar, salt
+    </sql>
+
+    <sql id="insertFields">
+        username, password, nick_name, age, sex, address, avatar, salt
+    </sql>
+
+    <select id="selectPwdByName" resultType="String" resultMap="UserResult">
+        select password from user where username=#{username}
+    </select>
+    <select id="selectOne" resultType="User" resultMap="UserResult">
+        select <include refid="selectFields"></include>
+        from user
+        where username=#{username} and password=#{password}
+    </select>
+
+    <select id="selectUserByName" resultType="User" resultMap="UserResult">
+        select <include refid="selectFields"></include>
+        from user
+        where username=#{username}
+    </select>
+
+    <select id="selectUsers" resultType="User" resultMap="UserResult">
+        select <include refid="selectFields"></include>
+        from user
+    </select>
+    <select id="selectUsersBySearch" resultType="com.dabai.cms.entity.User" parameterType="String" resultMap="UserResult">
+        select <include refid="selectFields"></include>
+        from user
+        <where>
+            <if test="search != null">
+                nick_name like "%"#{search}"%"
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertOne" parameterType="User" keyProperty="id">
+        insert into user(<include refid="insertFields"></include>)
+        values(#{username},#{password},#{nickName},#{age},#{sex},#{address},#{avatar},#{salt})
+    </insert>
+
+    <update id="updateById" parameterType="User">
+        update user
+        set username=#{username},password=#{password},nick_name=#{nickName},age=#{age},sex=#{sex},address=#{address},avatar=#{avatar},salt=#{salt}
+        where id=#{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from user where id=#{id}
+    </delete>
+</mapper>

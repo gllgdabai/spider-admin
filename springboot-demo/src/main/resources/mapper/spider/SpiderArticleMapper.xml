@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dabai.spider.mapper.SpiderArticleMapper">
+    
+    <insert id="insertArticle" parameterType="Map">
+        INSERT IGNORE INTO cms_article(id,title,category_id,link,create_time,content)
+        VALUES(#{id},#{title},#{category_id},#{link},#{create_time},#{content})
+    </insert>
+    <insert id="insertArticleContent" parameterType="Map">
+        INSERT INTO cms_article_content(id,content)
+		VALUES (#{id},#{content})
+    </insert>
+    
+</mapper>

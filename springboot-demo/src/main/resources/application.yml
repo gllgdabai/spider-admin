@@ -1,0 +1,35 @@
+server:
+  port: 9090
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/springboot_vue?useUnicode=true&characterEncoding=UTF-8&serverTimeZone=UTC
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  # redisProperties
+  redis:
+    host: localhost
+    port: 6379
+
+#mybatis-plus
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
+# MybatisProperties
+mybatis:
+  # ???????
+  typeAliasesPackage: com.dabai.cms.entity,com.dabai.spider.entity
+  # ??mapper?????????mapper.xml????
+  mapperLocations: classpath:mapper/**/*Mapper.xml
+  # ?????????
+  configLocation: classpath:mybatis/mybatis-config.xml
+
+# pageHelper
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+
