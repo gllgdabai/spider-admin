@@ -14,6 +14,10 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 ```
 
+## 导入ruoyi.common工具包
+由于com.ruoyi.common在maven仓库无法下载，需要手动下载jar包并导入项目。
+jar放在了ruoyi-common文件夹中
+![lok9g.png](https://s1.328888.xyz/2022/05/26/lok9g.png)
 
 
 ## ElasticSearch
