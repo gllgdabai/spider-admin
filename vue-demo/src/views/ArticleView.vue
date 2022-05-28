@@ -7,9 +7,9 @@
     </div>
     <!-- 搜索区 -->
     <div style="margin: 10px">
-      文章标题： <el-input v-model="search" placeholder="请输入关键字" style="width: 12%;" clearable/>
+      标题检索： <el-input v-model="searchByTitle" placeholder="请输入关键字" style="width: 12%;" clearable/>
       <el-button style="margin-left: 10px" type="primary" @click="load">查询</el-button>
-      高级检索： <el-input v-model="searchByEs" placeholder="请输入关键字" style="width: 12%;" clearable/>
+      全文检索： <el-input v-model="search" placeholder="请输入关键字" style="width: 12%;" clearable/>
       <el-button style="margin-left: 10px" type="success" @click="loadByEs">查询</el-button>
     </div>
     <el-table :data="tableData" border stripe style="width: 100%"
@@ -82,8 +82,9 @@ export default {
   components: {},
   data() {
     return {
+      searchByTitle: '',
       search: '',
-      searchByEs: '',
+      last_click: 0,  // 0表示最近点击的是标题检索按钮，1表示最近点击的是全文检索按钮
       currentPage: 1,
       pageSize: 10,
       total: 0,
@@ -99,33 +100,67 @@ export default {
   methods: {
     load() {
       this.loading = true
-      request.get("/cms/article", {
-        params:{
-          pageNum: this.currentPage,
-          pageSize: this.pageSize,
-          search: this.search
-        }
-      }).then(res => {
-        console.log(res)
-        this.loading = false;
-        this.tableData = res.data.list
-        this.total = res.data.total
-      })
+      this.last_click = 0
+      this.search = ''
+      if(this.searchByTitle === '' && this.search === '') {
+        request.get("/cms/article", {
+          params:{
+            pageNum: this.currentPage,
+            pageSize: this.pageSize,
+          }
+        }).then(res => {
+          console.log(res)
+          this.loading = false;
+          this.tableData = res.data.list
+          this.total = res.data.total
+        })
+      } else {
+        request.get("/cms/article/findTitleByKeywordByPage", {
+          params:{
+            pageNum: this.currentPage,
+            pageSize: this.pageSize,
+            searchByTitle: this.searchByTitle
+          }
+        }).then(res => {
+          console.log(res)
+          this.loading = false;
+          this.tableData = res.data.list
+          this.total = res.data.total
+        })
+      }
+
     },
     loadByEs() {
       this.loading = true
-      request.get("/cms/article/findByKeywordByPage", {
-        params:{
-          pageNum: this.currentPage,
-          pageSize: this.pageSize,
-          searchByEs: this.searchByEs
-        }
-      }).then(res => {
-        console.log(res)
-        this.loading = false;
-        this.tableData = res.data.list
-        this.total = res.data.total
-      })
+      this.last_click = 1
+      this.searchByTitle = ''
+      if (this.search === '') {
+        request.get("/cms/article", {
+          params:{
+            pageNum: this.currentPage,
+            pageSize: this.pageSize,
+          }
+        }).then(res => {
+          console.log(res)
+          this.loading = false;
+          this.tableData = res.data.list
+          this.total = res.data.total
+        })
+      } else {
+        request.get("/cms/article/findPageByKeyword", {
+          params:{
+            pageNum: this.currentPage,
+            pageSize: this.pageSize,
+            search: this.search
+          }
+        }).then(res => {
+          console.log(res)
+          this.loading = false;
+          this.tableData = res.data.list
+          this.total = res.data.total
+        })
+      }
+
     },
     save() {
       // 获取富文本组件中的内容
@@ -178,11 +213,20 @@ export default {
     },
     handleSizeChange(pageSize) {   // 改变当前每页的个数触发
       this.pageSize = pageSize
-      this.load()
+      if(this.last_click === 0 || this.searchByTitle === '' && this.search === '') {
+        this.load()
+      }else {
+        this.loadByEs()
+      }
+
     },
     handleCurrentChange(pageNum) {  // 改变当前页码触发
       this.currentPage = pageNum
-      this.load()
+      if(this.last_click === 0 || this.searchByTitle === '' && this.search === '') {
+        this.load()
+      }else {
+        this.loadByEs()
+      }
     }
   }
 }

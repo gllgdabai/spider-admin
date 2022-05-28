@@ -38,7 +38,7 @@ public class SpiderField extends BaseEntity {
     private String extractBy;
 
     /** 常量值 */
-    private String constantValue;
+    private Integer constantValue;
 
     /** 元素的索引 */
     private String extractIndex;
@@ -49,7 +49,7 @@ public class SpiderField extends BaseEntity {
     /** 是否是根据元素取值 */
     private String extractAttrFlag;
 
-    /** 根据哪个元素取值 */
+    /** 根据哪个元素取值，属性名 */
     private String extractAttr;
 
     private List<SpiderFiledRule> fieldRules= Lists.newArrayList();//规则字段，存放该字段文本处理规则
@@ -69,105 +69,6 @@ public class SpiderField extends BaseEntity {
             this.fieldRules.add(rule);
         }
         return this;
-    }
-    public void setFieldId(Long fieldId)
-    {
-        this.fieldId = fieldId;
-    }
-
-    public Long getFieldId()
-    {
-        return fieldId;
-    }
-    public void setConfigId(Long configId)
-    {
-        this.configId = configId;
-    }
-
-    public Long getConfigId()
-    {
-        return configId;
-    }
-    public void setField(String field)
-    {
-        this.field = field;
-    }
-
-    public String getField()
-    {
-        return field;
-    }
-    public void setFieldName(String fieldName)
-    {
-        this.fieldName = fieldName;
-    }
-
-    public String getFieldName()
-    {
-        return fieldName;
-    }
-    public void setExtractType(String extractType)
-    {
-        this.extractType = extractType;
-    }
-
-    public String getExtractType()
-    {
-        return extractType;
-    }
-    public void setExtractBy(String extractBy)
-    {
-        this.extractBy = extractBy;
-    }
-
-    public String getExtractBy()
-    {
-        return extractBy;
-    }
-    public void setConstantValue(String constantValue)
-    {
-        this.constantValue = constantValue;
-    }
-
-    public String getConstantValue()
-    {
-        return constantValue;
-    }
-    public void setExtractIndex(String extractIndex)
-    {
-        this.extractIndex = extractIndex;
-    }
-
-    public String getExtractIndex()
-    {
-        return extractIndex;
-    }
-    public void setProcessRuleId(String processRuleId)
-    {
-        this.processRuleId = processRuleId;
-    }
-
-    public String getProcessRuleId()
-    {
-        return processRuleId;
-    }
-    public void setExtractAttrFlag(String extractAttrFlag)
-    {
-        this.extractAttrFlag = extractAttrFlag;
-    }
-
-    public String getExtractAttrFlag()
-    {
-        return extractAttrFlag;
-    }
-    public void setExtractAttr(String extractAttr)
-    {
-        this.extractAttr = extractAttr;
-    }
-
-    public String getExtractAttr()
-    {
-        return extractAttr;
     }
 
     @Override

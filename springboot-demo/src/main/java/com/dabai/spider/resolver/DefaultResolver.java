@@ -84,11 +84,16 @@ public class DefaultResolver implements Resolver {
         return sourceValue;
     }
     private void xpath_put(Page page, Html pageHtml, SpiderField field) {
-        if (StringUtils.isNotEmpty(field.getExtractAttr())) {
-            String value=pageHtml.xpath(field.getExtractAttr()).get();
+        if(StringUtils.isNotEmpty(field.getExtractBy())) {
+            String value = pageHtml.xpath(field.getExtractBy()).get();
             value= processValue(value,field);//处理替换
             page.putField(field.getField(), value);
         }
+//        if (StringUtils.isNotEmpty(field.getExtractAttr())) {
+//            String value=pageHtml.xpath(field.getExtractAttr()).get();
+//            value= processValue(value,field);//处理替换
+//            page.putField(field.getField(), value);
+//        }
     }
     private void css_put(Page page, Document pageDoc, SpiderField field) {
         String[] indexArr=field.getExtractIndex().split(",");

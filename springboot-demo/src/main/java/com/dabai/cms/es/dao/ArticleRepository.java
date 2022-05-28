@@ -16,5 +16,10 @@ public interface ArticleRepository extends ElasticsearchRepository<ArticleEntity
 
     int deleteArticleEntityById(String id);
 
+    List<ArticleEntity> findByTitleLike(String title);
+
+    List<ArticleEntity> findByContentLike(String content);
+
     List<ArticleEntity> findByTitleLikeOrContentLike(String title, String content);
+
 }

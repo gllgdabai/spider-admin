@@ -135,7 +135,7 @@ public class SpiderMissionController extends BaseController {
         }
         // 把spiderConfigIdName 根据"|"划分，取到配置Id
         String spiderConfigIdName = spiderMission.getSpiderConfigIdName();
-        String configId = spiderConfigIdName.split("|")[0];
+        String configId = spiderConfigIdName.split("\\|")[0];
         spiderMission.setSpiderConfigId(Long.valueOf(configId));
         return toAjax(spiderMissionService.updateSpiderMission(spiderMission));
     }

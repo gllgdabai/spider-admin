@@ -33,3 +33,7 @@ pagehelper:
   reasonable: true
   support-methods-arguments: true
 
+# 自定义 es 主机和端口
+elasticsearch:
+  host: localhost:9200
+

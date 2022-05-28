@@ -18,6 +18,7 @@ import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.ICallBack;
 import com.ruoyi.common.utils.Guid;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -132,25 +133,32 @@ public class SpiderMissionServiceImpl implements ISpiderMissionService {
                 String category_id = data.get("category_id");
                 String link = data.get("link");
                 Date date = new Date();
-                HashMap map = new HashMap();
-                String id= Guid.get();
-                map.put("id", id);
-                map.put("title", title);
-                map.put("content", content);
-                map.put("category_id", category_id);
-                map.put("link", link);
-                map.put("create_time", date);
-                int rows = spiderArticleMapper.insertArticle(map);  // 文章加入到数据库
+                // 过滤数据：过滤掉标题为空或者内容为空的数据
+                if (StringUtils.isNotBlank(title) && StringUtils.isNotBlank(content)) {
+                    HashMap map = new HashMap();
+                    String id = Guid.get();
+                    map.put("id", id);
+                    map.put("title", title);
+                    map.put("content", content);
+                    map.put("category_id", category_id);
+                    map.put("link", link);
+                    map.put("create_time", date);
+
+
+                    int rows = spiderArticleMapper.insertArticle(map);  // 文章加入到数据库
 //                if (rows > 0) {
 //                    spiderArticleMapper.insertArticleContent(map);  // 文章内容加入到数据库
 //                }
-                ArticleEntity articleEntity = new ArticleEntity();
-                articleEntity.setId(id);
-                articleEntity.setTitle(title);
-                articleEntity.setContent(content);
-                articleEntity.setLink(link);
-                articleService.save(articleEntity); // 存入es
-
+                    if (rows > 0) {
+                        // 确保文章成功添加到数据库，才能加入es
+                        ArticleEntity articleEntity = new ArticleEntity();
+                        articleEntity.setId(id);
+                        articleEntity.setTitle(title);
+                        articleEntity.setContent(content);
+                        articleEntity.setLink(link);
+                        articleService.save(articleEntity); // 存入es
+                    }
+                }
             });
 
         }

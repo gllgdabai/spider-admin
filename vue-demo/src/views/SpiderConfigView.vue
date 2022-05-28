@@ -118,13 +118,21 @@
         <!-- 功能区 -->
         <div style="margin: 10px">
           <el-button type="primary" @click="addField(configId)">添加字段</el-button>
+          <el-button type="danger" @click="batchRemove(row)">批量删除</el-button>
         </div>
-        <el-table :data="tableFields" border stripe style="width: 100%">
+        <el-table
+            :data="tableFields"
+            border stripe style="width: 100%"
+            @selection-change="handleSelectionChange">
+          <el-table-column
+              type="selection"
+              width="55">
+          </el-table-column>
           <el-table-column prop="field" label="字段"  />
           <el-table-column prop="fieldName" label="字段名称"  />
           <el-table-column prop="extractType" label="提取类型" />
           <el-table-column prop="extractBy" label="提取规则" />
-          <el-table-column fixed="right" label="操作" width="220">
+          <el-table-column fixed="right" label="操作" width="150">
             <template #default="scope">
               <el-button type="primary" size="small" @click="handleFieldEdit(scope.row)">编辑</el-button>
               <el-popconfirm title="您确定要删除吗?" @confirm="handleFieldDelete(scope.row.fieldId)">
@@ -138,7 +146,6 @@
 
         <template #footer>
       <span class="dialog-footer">
-          <el-button type="primary" @click="saveField">确定</el-button>
           <el-button @click="configFieldsDialogVisible = false;">取消</el-button>
       </span>
         </template>
@@ -151,29 +158,35 @@
           :before-close="handleClose"
       >
         <!-- 表单 -->
-        <el-form :model="fieldForm" label-width="120px">
+        <el-form :model="fieldForm" :rules="fieldFormRules" ref="fieldForm"  label-width="120px">
           <el-form-item>
             <el-input v-model="fieldForm.configId" type="hidden" />
           </el-form-item>
-          <el-form-item label="字段">
+          <el-form-item label="字段" prop="field">
             <el-input v-model="fieldForm.field" placeholder="请输入字段" style="width: 80%"/>
           </el-form-item>
-          <el-form-item label="字段名称">
+          <el-form-item label="字段名称" prop="fieldName">
             <el-input v-model="fieldForm.fieldName" placeholder="请输入字段名称" style="width: 80%"/>
           </el-form-item>
-          <el-form-item label="提取类型">
+          <el-form-item label="提取类型" prop="extractType">
             <el-radio v-model="fieldForm.extractType" label="xpath" >Xpath</el-radio>
             <el-radio v-model="fieldForm.extractType" label="css" >Css</el-radio>
             <el-radio v-model="fieldForm.extractType" label="constant" >常量</el-radio>
           </el-form-item>
-          <el-form-item label="提取规则" v-if="fieldForm.extractType != 'constant'">
+          <el-form-item label="提取规则" prop="extractBy" v-if="fieldForm.extractType != 'constant'">
             <el-input v-model="fieldForm.extractBy" placeholder="请输入Xpath值或Css值"  style="width: 80%"/>
           </el-form-item>
           <el-form-item label="元素的索引" v-if="fieldForm.extractType === 'css'">
-            <el-input v-model="fieldForm.extractIndex" placeholder="默认则输入0" style="width: 80%" />
+            <el-input v-model="fieldForm.extractIndex" placeholder="数字间用逗号分隔" style="width: 80%" />
           </el-form-item>
           <el-form-item label="根据属性取值" v-if="fieldForm.extractType === 'css'">
             <el-switch v-model="fieldForm.extractAttrFlag" active-color="#13ce66" inactive-color="#808080" />
+          </el-form-item>
+          <el-form-item label="属性名" v-if="fieldForm.extractAttrFlag === true">
+            <el-input v-model="fieldForm.extractAttr" placeholder="请输入属性名" style="width: 80%"/>
+          </el-form-item>
+          <el-form-item label="常量值" prop="constantValue" v-if="fieldForm.extractType === 'constant'">
+            <el-input v-model.number="fieldForm.constantValue" style="width: 80%"/>
           </el-form-item>
         </el-form>
         <template #footer>
@@ -227,6 +240,24 @@ export default {
           { required: true, message: '请输入网站根域名', trigger: 'blur' }
         ]
       },
+      fieldFormRules: {
+        field: [
+          { required: true, message: '请输入字段', trigger: 'blur' },
+        ],
+        fieldName: [
+          { required: true, message: '请输入字段名称', trigger: 'blur' },
+        ],
+        extractType: [
+          { required: true, message: '请选择提取类型', trigger: 'change' }
+        ],
+        extractBy: [
+          { required: true, message: '请输入提取规则', trigger: 'blur' },
+        ],
+        constantValue: [
+          { required: true, message: '常量值不能为空'},
+          { type: 'number', message: '常量值必须为数字值'}
+        ]
+      }
     }
   },
   created() {
@@ -265,6 +296,7 @@ export default {
       this.fieldDiaLogVisible = true
       this.fieldForm = {
         configId: id,
+        extractIndex: 0
       }
     },
     save() {
@@ -314,42 +346,53 @@ export default {
       });
     },
     saveField() {
-      if (this.fieldForm.fieldId) {  // 更新
-        request.post("/spider/spiderField/edit", this.fieldForm).then(res => {
-          console.log(res)
-          if (res.code === 0) {
-            this.$message({
-              type: "success",
-              message: "更新成功"
+      this.$refs['fieldForm'].validate((valid) => {
+        if (valid) {
+          if (this.fieldForm.fieldId) {  // 更新
+            request.post("/spider/spiderField/edit", this.fieldForm).then(res => {
+              console.log(res)
+              if (res.code === 0) {
+                this.$message({
+                  type: "success",
+                  message: "更新成功"
+                })
+              } else {
+                this.$message({
+                  type: "error",
+                  message: res.msg
+                })
+              }
+              // 刷新表格的数据
+              this.fieldDiaLogVisible = false  // 关闭弹窗
+              this.configFieldsDialogVisible = false;
             })
-          } else {
-            this.$message({
-              type: "error",
-              message: res.msg
-            })
-          }
-          // 刷新表格的数据
-          this.fieldDiaLogVisible = false  // 关闭弹窗
-        })
-      } else {  // 新增
-        request.post("/spider/spiderField/add", this.fieldForm).then(res => {
-          console.log(res)
-          if (res.code === 0) {
-            this.$message({
-              type: "success",
-              message: "新增成功"
-            })
-          } else {
-            this.$message({
-              type: "error",
-              message: res.msg
-            })
-          }
+          } else {  // 新增
+            request.post("/spider/spiderField/add", this.fieldForm).then(res => {
+              console.log(res)
+              if (res.code === 0) {
+                this.$message({
+                  type: "success",
+                  message: "新增成功"
+                })
+              } else {
+                this.$message({
+                  type: "error",
+                  message: res.msg
+                })
+              }
 
-          // 刷新表格的数据
-          this.fieldDiaLogVisible = false  // 关闭弹窗
-        })
-      }
+              // 刷新表格的数据
+              this.fieldDiaLogVisible = false  // 关闭弹窗
+              this.configFieldsDialogVisible = false;
+            })
+          }
+        } else {
+          this.$message({
+            type: "error",
+            message: res.msg
+          })
+        }
+      });
     },
     handleEdit(row) {
       this.form = JSON.parse(JSON.stringify(row))
@@ -400,6 +443,8 @@ export default {
           })
         }
         // 删除之后重新加载表格的数据
+        // 直接关闭弹窗
+        this.configFieldsDialogVisible = false;
       })
     },
     handleSizeChange(pageSize) {   // 改变当前每页的个数触发
@@ -416,6 +461,9 @@ export default {
       else if(data === 1 || data === '1') return "使用";
       else return "不使用";
     },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    }
   }
 
 }

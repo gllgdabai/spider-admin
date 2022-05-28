@@ -1,6 +1,7 @@
 package com.dabai.cms.controller;
 
 import com.dabai.cms.entity.Article;
+import com.dabai.cms.entity.SearchResult;
 import com.dabai.cms.es.entity.ArticleEntity;
 import com.dabai.cms.es.service.ArticleService;
 import com.dabai.cms.service.IArticleService;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 /** 文章管理Controller
  * @author
@@ -38,12 +41,31 @@ public class ArticleController extends BaseController
         return AjaxResult.success(pageInfo);
     }
 
-    @GetMapping("/findByKeywordByPage")
+    @GetMapping("/findTitleByKeywordByPage")
     @ResponseBody
-    public AjaxResult findPageByEs(@RequestParam(defaultValue = "1") Integer pageNum,
+    public AjaxResult findPageByTitle(@RequestParam(defaultValue = "1") Integer pageNum,
+                                      @RequestParam(defaultValue = "10") Integer pageSize,
+                                      @RequestParam(defaultValue = "") String searchByTitle) {
+        SearchResult<ArticleEntity> pageInfo = null;
+        try {
+            pageInfo = articleServiceEs.findPageByTitle(pageNum, pageSize, searchByTitle);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return AjaxResult.success(pageInfo);
+    }
+
+    @GetMapping("/findPageByKeyword")
+    @ResponseBody
+    public AjaxResult findPageByContent(@RequestParam(defaultValue = "1") Integer pageNum,
                                    @RequestParam(defaultValue = "10") Integer pageSize,
-                                   @RequestParam(defaultValue = "") String searchByEs) {
-        PageInfo<ArticleEntity> pageInfo = articleServiceEs.findByKeywordByPage(pageNum, pageSize, searchByEs);
+                                   @RequestParam(defaultValue = "") String search) {
+        SearchResult<ArticleEntity> pageInfo = null;
+        try {
+            pageInfo = articleServiceEs.findPageByKeyword(pageNum, pageSize, search);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return AjaxResult.success(pageInfo);
     }
 

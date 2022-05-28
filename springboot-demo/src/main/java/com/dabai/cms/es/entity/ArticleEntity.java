@@ -6,16 +6,19 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 /**
+ * @Document 将这个类对象转为 es 中的一条文档进行录入
+ *  indexName：用来指定文档的所以名称
+ *  createIndex：用来指定是否创建索引，默认为true
+ * @Id 用来将放入对象的id字段 作为ES中文档的_id 进行映射
+ *
  * @author
  * @create 2022-05-21 10:08
  */
-//es 7.0需注意地方 shards ,replicas 在document弃用，改用setting注入
-//@Setting(shards = 6,replicas = 3)
 @Document(indexName = "article_index")
 @Data
 public class ArticleEntity {
     /** 主键，文章ID */
-    @Field(type = FieldType.Integer)
+    // @Id
     private String id;
 
     /** 文章标题 */
