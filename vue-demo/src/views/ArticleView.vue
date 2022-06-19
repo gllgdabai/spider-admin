@@ -14,6 +14,7 @@
     </div>
     <el-table :data="tableData" border stripe style="width: 100%"
               v-loading="loading"
+              max-height="700"
               element-loading-text="拼命加载中"
               element-loading-background="rgba(0, 0, 0, 0.8)"
     >

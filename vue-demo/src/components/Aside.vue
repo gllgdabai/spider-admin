@@ -18,6 +18,7 @@
           <el-menu-item index="/spider/spiderConfig">爬虫配置</el-menu-item>
         </el-sub-menu>
         <el-menu-item index="/article">文章管理</el-menu-item>
+        <el-menu-item index="/bigEvent">大事件管理</el-menu-item>
       </el-sub-menu>
     </el-menu>
   </div>

@@ -27,6 +27,11 @@ const routes = [
         path: 'article',
         name: 'article',
         component: () => import("@/views/ArticleView"),
+      },
+      {
+        path: 'bigEvent',
+        name: 'bigEvent',
+        component: () => import("@/views/BigEventView"),
       }
     ]
   },

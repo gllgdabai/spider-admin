@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dabai.cms.mapper.BigEventMapper">
+
+    <resultMap type="BigEvent" id="BigEventResult">
+        <result property="id"    column="id"    />
+        <result property="year"    column="year"    />
+        <result property="date"    column="date"    />
+        <result property="event"    column="event"    />
+    </resultMap>
+
+    <sql id="selectFields">
+        id, year, date, event
+    </sql>
+
+    <sql id="insertFields">
+        year, date, event
+    </sql>
+
+    <select id="selectBigEvents" resultType="BigEvent" resultMap="BigEventResult">
+        select <include refid="selectFields"></include>
+        from cms_bigevent
+    </select>
+
+    <select id="selectBigEventsBySearch" resultType="BigEvent" parameterType="String" resultMap="BigEventResult">
+        select <include refid="selectFields"></include>
+        from cms_bigevent
+        <where>
+            <if test="year != null and year != '' ">
+                year = #{year}
+            </if>
+            <if test="search != null">
+                and event like "%"#{search}"%"
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertOne" parameterType="BigEvent" keyProperty="id">
+        insert into cms_bigevent(<include refid="insertFields"></include>)
+        values(#{year},#{date},#{event})
+    </insert>
+
+    <update id="updateById" parameterType="BigEvent">
+        update cms_bigevent
+        set year=#{year},date=#{date},event=#{event}
+        where id=#{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from cms_bigevent where id=#{id}
+    </delete>
+</mapper>
