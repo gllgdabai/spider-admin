@@ -11,6 +11,7 @@ import org.jsoup.nodes.Element;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.selector.Html;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -55,7 +56,15 @@ public class DefaultResolver implements Resolver {
         if (StringUtils.isNotEmpty(spiderConfig.getTargetRegex())) {
             if(spiderConfig.getCascade()==1 || spiderConfig.getEntryUrlsList().contains(link)){
                 //级联发现或者是入口URL才收集目标URL
-                page.addTargetRequests(page.getHtml().links().regex(spiderConfig.getTargetRegex()).all());
+                List<String> urls = page.getHtml().links().regex(spiderConfig.getTargetRegex()).all();
+                // 由于这些url可能包含特殊字符，因此需要进行处理，替换为%+ASCII, 如 ^ 替换为 %5E
+                // 偷个懒先，暂时只处理 ^
+                List<String> new_urls = new ArrayList<>();
+                for (String url : urls) {
+                    url = url.replaceAll("\\^", "%5E");
+                    new_urls.add(url);
+                }
+                page.addTargetRequests(new_urls);
             }
         }
     }

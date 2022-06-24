@@ -21,5 +21,5 @@ public interface SpiderArticleMapper {
      * 将爬取的文章正文内容加入数据库表 cms_article_content
      * @param map
      */
-    public void insertArticleContent(Map map);
+//    public void insertArticleContent(Map map);
 }

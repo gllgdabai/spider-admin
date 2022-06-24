@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.Setting;
 
 /**
  * @Document 将这个类对象转为 es 中的一条文档进行录入
@@ -14,6 +15,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
  * @author
  * @create 2022-05-21 10:08
  */
+@Setting(shards = 5,replicas = 1)
 @Document(indexName = "article_index")
 @Data
 public class ArticleEntity {

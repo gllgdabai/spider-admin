@@ -30,16 +30,19 @@
         from spider_mission a
     </sql>
 
-    <select id="selectSpiderMissionList" parameterType="SpiderMission" resultMap="SpiderMissionResult">
+<!--    <select id="selectSpiderMissionList" parameterType="SpiderMission" resultMap="SpiderMissionResult">-->
+<!--        <include refid="selectSpiderMissionVo"/>-->
+<!--        <where>-->
+<!--            <if test="missionName != null  and missionName != ''"> and a.mission_name like concat('%', #{missionName}, '%')</if>-->
+<!--            <if test="status != null  and status != ''"> and a.status = #{status}</if>-->
+
+<!--            &lt;!&ndash; 数据范围过滤 &ndash;&gt;-->
+<!--            ${params.dataScope}-->
+<!--        </where>-->
+<!--    </select>-->
+
+    <select id="selectSpiderMissionList" resultMap="SpiderMissionResult">
         <include refid="selectSpiderMissionVo"/>
-        <where>
-            <if test="missionName != null  and missionName != ''"> and a.mission_name like concat('%', #{missionName}, '%')</if>
-            <if test="status != null  and status != ''"> and a.status = #{status}</if>
-
-            <!-- 数据范围过滤 -->
-            ${params.dataScope}
-
-        </where>
     </select>
 
     <select id="selectSpiderMissionListBySearch" resultType="SpiderMission" resultMap="SpiderMissionResult" parameterType="String">

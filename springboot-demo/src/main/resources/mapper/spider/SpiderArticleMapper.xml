@@ -3,14 +3,89 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dabai.spider.mapper.SpiderArticleMapper">
-    
+
     <insert id="insertArticle" parameterType="Map">
-        INSERT IGNORE INTO cms_article(id,title,category_id,link,create_time,content)
-        VALUES(#{id},#{title},#{category_id},#{link},#{create_time},#{content})
+        INSERT IGNORE INTO cms_article
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">id,</if>
+            <if test="article_region != null  and article_region != ''">article_region,</if>
+            <if test="author != null  and author != ''">author,</if>
+            <if test="publish_time != null  and publish_time != ''">publish_time,</if>
+            <if test="title != null  and title != ''">title,</if>
+            <if test="keywords != null  and keywords != ''">keywords,</if>
+            <if test="description != null  and description != ''">description,</if>
+            <if test="cover_image != null  and cover_image != ''">cover_image,</if>
+            <if test="copy_flag != null ">copy_flag,</if>
+            <if test="category_id != null  and category_id != ''">category_id,</if>
+            <if test="link != null  and link != ''">link,</if>
+            <if test="static_url != null  and static_url != ''">static_url,</if>
+            <if test="tags != null  and tags != ''">tags,</if>
+            <if test="hit != null ">hit,</if>
+            <if test="reply_num != null ">reply_num,</if>
+            <if test="up_vote != null ">up_vote,</if>
+            <if test="down_vote != null ">down_vote,</if>
+            <if test="hot_flag != null ">hot_flag,</if>
+            <if test="new_flag != null ">new_flag,</if>
+            <if test="comment_flag != null ">comment_flag,</if>
+            <if test="top_flag != null ">top_flag,</if>
+            <if test="favourite != null ">favourite,</if>
+            <if test="mission_id != null  and mission_id != ''">mission_id,</if>
+            <if test="template_name != null  and template_name != ''">template_name,</if>
+            <if test="create_time != null ">create_time,</if>
+            <if test="update_time != null ">update_time,</if>
+            <if test="available != null ">available,</if>
+            <if test="deleted != null ">deleted,</if>
+            <if test="extra1 != null  and extra1 != ''">extra1,</if>
+            <if test="extra2 != null  and extra2 != ''">extra2,</if>
+            <if test="extra3 != null  and extra3 != ''">extra3,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="content_markdown_source != null  and content_markdown_source != ''">content_markdown_source,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">#{id},</if>
+            <if test="article_region != null  and article_region != ''">#{article_region},</if>
+            <if test="author != null  and author != ''">#{author},</if>
+            <if test="publish_time != null  and publish_time != ''">#{publish_time},</if>
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="keywords != null  and keywords != ''">#{keywords},</if>
+            <if test="description != null  and description != ''">#{description},</if>
+            <if test="cover_image != null  and cover_image != ''">#{cover_image},</if>
+            <if test="copy_flag != null ">#{copy_flag},</if>
+            <if test="category_id != null  and category_id != ''">#{category_id},</if>
+            <if test="link != null  and link != ''">#{link},</if>
+            <if test="static_url != null  and static_url != ''">#{static_url},</if>
+            <if test="tags != null  and tags != ''">#{tags},</if>
+            <if test="hit != null ">#{hit},</if>
+            <if test="reply_num != null ">#{reply_num},</if>
+            <if test="up_vote != null ">#{up_vote},</if>
+            <if test="down_vote != null ">#{down_vote},</if>
+            <if test="hot_flag != null ">#{hot_flag},</if>
+            <if test="new_flag != null ">#{new_flag},</if>
+            <if test="comment_flag != null ">#{comment_flag},</if>
+            <if test="top_flag != null ">#{top_flag},</if>
+            <if test="favourite != null ">#{favourite},</if>
+            <if test="mission_id != null  and mission_id != ''">#{mission_id},</if>
+            <if test="template_name != null  and template_name != ''">#{template_name},</if>
+            <if test="create_time != null ">#{create_time},</if>
+            <if test="update_time != null ">#{update_time},</if>
+            <if test="available != null ">#{available},</if>
+            <if test="deleted != null ">#{deleted},</if>
+            <if test="extra1 != null  and extra1 != ''">#{extra1},</if>
+            <if test="extra2 != null  and extra2 != ''">#{extra2},</if>
+            <if test="extra3 != null  and extra3 != ''">#{extra3},</if>
+            <if test="content != null  and content != ''">#{content}</if>
+            <if test="content_markdown_source != null  and content_markdown_source != ''">#{content_markdown_source}</if>
+        </trim>
     </insert>
-    <insert id="insertArticleContent" parameterType="Map">
-        INSERT INTO cms_article_content(id,content)
-		VALUES (#{id},#{content})
-    </insert>
+
+    <!--    <insert id="insertArticle" parameterType="Map">-->
+    <!--        INSERT IGNORE INTO cms_article(id,title,category_id,link,create_time,content)-->
+    <!--        VALUES(#{id},#{title},#{category_id},#{link},#{create_time},#{content})-->
+    <!--    </insert>-->
+
+<!--    <insert id="insertArticleContent" parameterType="Map">-->
+<!--        INSERT INTO cms_article_content(id,content)-->
+<!--		VALUES (#{id},#{content})-->
+<!--    </insert>-->
     
 </mapper>

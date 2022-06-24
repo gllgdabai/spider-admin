@@ -57,8 +57,8 @@ public class SpiderMissionServiceImpl implements ISpiderMissionService {
 
     @Override
     @DataScope(deptAlias = "a", userAlias = "a")
-    public List<SpiderMission> selectSpiderMissionList(SpiderMission spiderMission) {
-        return spiderMissionMapper.selectSpiderMissionList(spiderMission);
+    public List<SpiderMission> selectSpiderMissionList() {
+        return spiderMissionMapper.selectSpiderMissionList();
     }
 
     @Override
@@ -128,27 +128,24 @@ public class SpiderMissionServiceImpl implements ISpiderMissionService {
             System.out.println(">>>>>>>>>>>>>" + datas.size() + ">>>>>>>>>>>>>>");
 
             datas.forEach(data -> {
+                // 文章爬虫配置，一定要配置title(标题)和content(内容)字段
                 String title = data.get("title");
                 String content = data.get("content");
-                String category_id = data.get("category_id");
-                String link = data.get("link");
-                Date date = new Date();
+                String link = data.get("link");     // 爬虫会记录爬取的链接link
                 // 过滤数据：过滤掉标题为空或者内容为空的数据
                 if (StringUtils.isNotBlank(title) && StringUtils.isNotBlank(content)) {
                     HashMap map = new HashMap();
                     String id = Guid.get();
+                    Date date = new Date();
                     map.put("id", id);
-                    map.put("title", title);
-                    map.put("content", content);
-                    map.put("category_id", category_id);
-                    map.put("link", link);
                     map.put("create_time", date);
-
-
+                    // 遍历字段，加入到map
+                    for (String key : data.keySet()) {
+                        String value = data.get(key);
+                        map.put(key, value);
+                    }
                     int rows = spiderArticleMapper.insertArticle(map);  // 文章加入到数据库
-//                if (rows > 0) {
-//                    spiderArticleMapper.insertArticleContent(map);  // 文章内容加入到数据库
-//                }
+
                     if (rows > 0) {
                         // 确保文章成功添加到数据库，才能加入es
                         ArticleEntity articleEntity = new ArticleEntity();

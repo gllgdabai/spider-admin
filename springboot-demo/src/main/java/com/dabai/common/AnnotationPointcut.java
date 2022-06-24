@@ -5,13 +5,13 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * @author
  * @create 2022-03-24 8:52
  */
-@Configuration
+// 不再打印，注释掉Configuration
+//@Configuration
 @Aspect
 public class AnnotationPointcut {
 

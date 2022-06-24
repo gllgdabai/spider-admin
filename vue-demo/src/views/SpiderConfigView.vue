@@ -89,7 +89,16 @@
                 :inactive-value="0"
                 active-color="#13ce66"
                 inactive-color="#808080"
-                style="width: 30%">
+                style="width: 20%">
+            </el-switch>
+            级联发现URL
+            <el-switch
+                v-model="form.cascade"
+                :active-value="1"
+                :inactive-value="0"
+                active-color="#13ce66"
+                inactive-color="#808080"
+                style="width: 20%">
             </el-switch>
             打印日志：
             <el-switch
@@ -98,7 +107,7 @@
                 :inactive-value="0"
                 active-color="#13ce66"
                 inactive-color="#808080"
-                style="width: 30%">
+                style="width: 20%">
             </el-switch>
         </el-form>
         <template #footer>

@@ -11,11 +11,27 @@ spring:
   redis:
     host: localhost
     port: 6379
+  # QuartzProperties
+  quartz:
+    job-store-type: jdbc
+    scheduler-name: spiderScheduler
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceId: AUTO #如果使用集群，instanceId必须唯一，设置成AUTO
+        jobStore:
+          class: org.quartz.impl.jdbcjobstore.JobStoreTX # 持久化方式，默认存储在内存中，此处使用数据库方式
+          driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+          isClustered: true
+        threadPool:
+          class: org.quartz.simpl.SimpleThreadPool
+          threadCount: 5
 
-#mybatis-plus
-mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+##mybatis-plus
+#mybatis-plus:
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 
 # MybatisProperties
@@ -36,4 +52,5 @@ pagehelper:
 # 自定义 es 主机和端口
 elasticsearch:
   host: localhost:9200
+
 

@@ -22,10 +22,9 @@ public interface SpiderMissionMapper {
     /**
      * 查询爬虫任务列表
      *
-     * @param spiderMission 爬虫任务
      * @return 爬虫任务集合
      */
-    public List<SpiderMission> selectSpiderMissionList(SpiderMission spiderMission);
+    public List<SpiderMission> selectSpiderMissionList();
 
     /**
      * 新增爬虫任务
