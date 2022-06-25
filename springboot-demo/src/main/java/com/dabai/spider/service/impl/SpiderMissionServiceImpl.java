@@ -150,6 +150,7 @@ public class SpiderMissionServiceImpl implements ISpiderMissionService {
                         // 确保文章成功添加到数据库，才能加入es
                         ArticleEntity articleEntity = new ArticleEntity();
                         articleEntity.setId(id);
+                        // 只添加title、content、link字段，其他字段不加入es
                         articleEntity.setTitle(title);
                         articleEntity.setContent(content);
                         articleEntity.setLink(link);
