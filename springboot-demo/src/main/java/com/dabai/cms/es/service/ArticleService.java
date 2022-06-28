@@ -110,4 +110,32 @@ public class ArticleService {
         return new SearchResult<>(articles, total);
     }
 
+    /**
+     * （分页）查询文章管理列表，通过ElasticSearch全文检索
+     * @param pageNum   当前页码
+     * @param pageSize  页码大小
+     * @return 自定义实体SearchResult 来接收 查询的结果
+     */
+    public SearchResult<ArticleEntity> findPageByAll(Integer pageNum, Integer pageSize) throws IOException {
+        SearchRequest searchRequest = new SearchRequest("article_index");
+        // 构建搜索条件
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
+                .trackTotalHits(true)
+                .query(QueryBuilders.matchAllQuery())
+                .from((pageNum-1)*pageSize) // 指定从哪条开始查询 start = (page-1)*size
+                .size(pageSize);
+
+        searchRequest.source(searchSourceBuilder);
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+
+        List<ArticleEntity> articles = new ArrayList<>();
+        SearchHits hits = searchResponse.getHits();
+        long total = hits.getTotalHits().value;
+        for (SearchHit hit : hits) {
+            ArticleEntity articleEntity = JSONObject.parseObject(hit.getSourceAsString(), ArticleEntity.class);
+            articles.add(articleEntity);
+        }
+        return new SearchResult<>(articles, total);
+    }
+
 }

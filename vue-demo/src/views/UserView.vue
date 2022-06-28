@@ -3,8 +3,6 @@
     <!-- 功能区 -->
     <div style="margin: 10px">
       <el-button type="primary" @click="add">新增</el-button>
-      <el-button type="primary" disabled>导入</el-button>
-      <el-button type="primary" disabled>导出</el-button>
     </div>
     <!-- 搜索区 -->
     <div style="margin: 10px">

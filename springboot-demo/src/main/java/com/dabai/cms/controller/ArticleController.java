@@ -69,6 +69,19 @@ public class ArticleController extends BaseController
         return AjaxResult.success(pageInfo);
     }
 
+    @GetMapping("/findPageByAll")
+    @ResponseBody
+    public AjaxResult findPageByAll(@RequestParam(defaultValue = "1") Integer pageNum,
+                                    @RequestParam(defaultValue = "10") Integer pageSize) {
+        SearchResult<ArticleEntity> pageInfo = null;
+        try {
+            pageInfo = articleServiceEs.findPageByAll(pageNum, pageSize);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return AjaxResult.success(pageInfo);
+    }
+
 
     /**
      * 新增保存文章管理
